@@ -72,7 +72,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <nav className="flex-1 p-4 space-y-1">
           {navItems.map((item) => (
             <Link
-              key={item.path}
+              key={item.label}
               to={item.path}
               className={cn(
                 "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
@@ -131,7 +131,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <nav className="p-4 space-y-2">
               {navItems.map((item) => (
                 <Link
-                  key={item.path}
+                  key={item.label}
                   to={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
                   className={cn(

@@ -135,7 +135,9 @@ const QuizPage: React.FC = () => {
 
     const attempt: Omit<QuizAttempt, 'id'> = {
       quizId: quiz.id,
+      quizTitle: quiz.title,
       studentId: profile.uid,
+      studentName: profile.displayName,
       score: Math.round(score * 100) / 100,
       totalQuestions: questions.length,
       correctAnswers: correct,

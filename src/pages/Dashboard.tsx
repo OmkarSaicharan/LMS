@@ -10,7 +10,7 @@ import {
   limit
 } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from '../firebase';
-import { Course, Quiz, Notification } from '../types';
+import { Course, Quiz, Notification, QuizAttempt } from '../types';
 import { 
   BookOpen, 
   Calendar, 
@@ -19,8 +19,10 @@ import {
   Bell, 
   Plus,
   Users,
+  User,
   GraduationCap,
-  FileText
+  FileText,
+  Trophy
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -32,6 +34,7 @@ const Dashboard: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [upcomingQuizzes, setUpcomingQuizzes] = useState<Quiz[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [recentResults, setRecentResults] = useState<QuizAttempt[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -87,6 +90,25 @@ const Dashboard: React.FC = () => {
       unsubscribeNotifications();
     };
   }, [profile, isAdmin, isFaculty, isStudent]);
+
+  useEffect(() => {
+    if (!profile || isStudent) return;
+
+    // Fetch recent quiz results for faculty/admin
+    const resultsQuery = query(
+      collection(db, 'quizAttempts'),
+      orderBy('submittedAt', 'desc'),
+      limit(10)
+    );
+
+    const unsubscribeResults = onSnapshot(resultsQuery, (snapshot) => {
+      setRecentResults(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as QuizAttempt)));
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'quizAttempts');
+    });
+
+    return () => unsubscribeResults();
+  }, [profile, isStudent]);
 
   if (loading) {
     return (
@@ -185,6 +207,39 @@ const Dashboard: React.FC = () => {
 
         {/* Sidebar Section */}
         <div className="space-y-8">
+          {/* Recent Quiz Results for Faculty/Admin */}
+          {(isAdmin || isFaculty) && (
+            <section className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+              <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                <Trophy size={20} className="text-indigo-600" />
+                Recent Quiz Results
+              </h2>
+              <div className="space-y-4">
+                {recentResults.length > 0 ? recentResults.map((result) => (
+                  <div key={result.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-bold text-slate-900 leading-tight">{result.quizTitle}</h3>
+                      <span className="px-2 py-0.5 bg-indigo-600 text-white text-[10px] font-black rounded-full">
+                        {result.score} pts
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      <span className="flex items-center gap-1">
+                        <User size={12} className="text-indigo-400" />
+                        {result.studentName}
+                      </span>
+                      <span>
+                        {format(new Date(result.submittedAt), 'MMM dd, hh:mm a')}
+                      </span>
+                    </div>
+                  </div>
+                )) : (
+                  <p className="text-sm text-slate-500 text-center py-4">No results recorded yet.</p>
+                )}
+              </div>
+            </section>
+          )}
+
           {/* Upcoming Quizzes */}
           <section className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">

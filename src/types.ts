@@ -61,7 +61,9 @@ export interface QuizQuestion {
 export interface QuizAttempt {
   id: string;
   quizId: string;
+  quizTitle: string;
   studentId: string;
+  studentName: string;
   score: number;
   totalQuestions: number;
   correctAnswers: number;
