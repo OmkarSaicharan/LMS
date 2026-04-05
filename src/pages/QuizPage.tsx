@@ -285,34 +285,50 @@ const QuizPage: React.FC = () => {
             key="attempting"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="space-y-6"
+            className="space-y-8 pb-20"
           >
-            <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between sticky top-20 z-10">
-              <div className="flex items-center gap-4">
-                <span className="text-sm font-bold text-slate-500">
-                  Question {currentQuestionIndex + 1} of {questions.length}
-                </span>
-                <div className="w-48 h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-indigo-600 transition-all duration-300" 
-                    style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
-                  />
+            {/* Quiz Progress Header - Wrapped in a container with background to prevent overlap transparency */}
+            <div className="sticky top-[96px] z-30 bg-slate-50 py-4 -mt-4">
+              <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-lg flex items-center justify-between">
+                <div className="flex items-center gap-4 flex-1">
+                  <div className="hidden sm:block">
+                    <span className="text-sm font-bold text-slate-500">
+                      Question {currentQuestionIndex + 1} of {questions.length}
+                    </span>
+                  </div>
+                  <div className="flex-1 max-w-xs h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-indigo-600 transition-all duration-300" 
+                      style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-xl font-black text-lg",
-                timeLeft < 60 ? "bg-red-50 text-red-600 animate-pulse" : "bg-indigo-50 text-indigo-600"
-              )}>
-                <Timer size={20} />
-                {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                <div className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-xl font-black text-lg ml-4 shrink-0",
+                  timeLeft < 60 ? "bg-red-50 text-red-600 animate-pulse" : "bg-indigo-50 text-indigo-600"
+                )}>
+                  <Timer size={20} />
+                  {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                </div>
               </div>
             </div>
 
-            <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
-              <h2 className="text-2xl font-bold text-slate-900 mb-8">
-                {questions[currentQuestionIndex]?.question}
-              </h2>
-              <div className="grid gap-4">
+            <div className="bg-white p-8 md:p-12 rounded-3xl border border-slate-100 shadow-sm min-h-[400px] flex flex-col mt-4">
+              <div className="mb-10">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-8 h-8 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center text-xs font-black">
+                    Q{currentQuestionIndex + 1}
+                  </span>
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
+                    Knowledge Assessment
+                  </span>
+                </div>
+                <h2 className="text-2xl md:text-4xl font-bold text-slate-900 leading-tight">
+                  {questions[currentQuestionIndex]?.question}
+                </h2>
+              </div>
+              
+              <div className="grid gap-4 mt-auto">
                 {questions[currentQuestionIndex]?.options.map((option, idx) => (
                   <button
                     key={idx}
