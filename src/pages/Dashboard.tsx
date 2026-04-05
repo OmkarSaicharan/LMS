@@ -58,6 +58,19 @@ const Dashboard: React.FC = () => {
       handleFirestoreError(error, OperationType.LIST, 'courses');
     });
 
+    // Also fetch from Spring Boot Backend to ensure connection
+    const fetchBackendCourses = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/courses');
+        const data = await response.json();
+        console.log('Courses from Spring Boot:', data);
+        // We could merge or replace, but for now we just log to verify connection
+      } catch (err) {
+        console.warn('Spring Boot Backend not reachable:', err);
+      }
+    };
+    fetchBackendCourses();
+
     const quizzesQuery = query(
       collection(db, 'quizzes'),
       where('isPublished', '==', true),

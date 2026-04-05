@@ -108,6 +108,17 @@ const CourseDetail: React.FC = () => {
 
       await addDoc(collection(db, 'quizzes'), quizData);
 
+      // Sync with Spring Boot Backend (MySQL)
+      try {
+        await fetch('http://localhost:8080/api/quizzes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(quizData)
+        });
+      } catch (syncErr) {
+        console.warn('Failed to sync quiz creation with local backend:', syncErr);
+      }
+
       // Notify students
       await addDoc(collection(db, 'notifications'), {
         userId: 'all_students',
@@ -146,6 +157,17 @@ const CourseDetail: React.FC = () => {
       };
 
       await addDoc(collection(db, 'assignments'), assignmentData);
+
+      // Sync with Spring Boot Backend (MySQL)
+      try {
+        await fetch('http://localhost:8080/api/assignments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(assignmentData)
+        });
+      } catch (syncErr) {
+        console.warn('Failed to sync assignment creation with local backend:', syncErr);
+      }
 
       // Notify students
       await addDoc(collection(db, 'notifications'), {

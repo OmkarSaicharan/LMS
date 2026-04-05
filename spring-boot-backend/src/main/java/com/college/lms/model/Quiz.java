@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "quizzes")
 public class Quiz {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String title;
     private String description;
     private String date;
@@ -18,4 +17,9 @@ public class Quiz {
     private String endTime;
     private int duration;
     private int totalMarks;
+    private String courseId;
+    private boolean isPublished;
+    
+    @Column(columnDefinition = "TEXT")
+    private String questions;
 }

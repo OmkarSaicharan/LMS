@@ -65,6 +65,17 @@ const LandingPage: React.FC = () => {
         };
         
         await setDoc(doc(db, 'users', user.uid), profile);
+
+        // Sync with Spring Boot Backend (MySQL)
+        try {
+          await fetch('http://localhost:8080/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profile)
+          });
+        } catch (syncErr) {
+          console.warn('Failed to sync with local backend:', syncErr);
+        }
       } else {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;

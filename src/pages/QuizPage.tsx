@@ -162,6 +162,18 @@ const QuizPage: React.FC = () => {
 
     try {
       const docRef = await addDoc(collection(db, 'quizAttempts'), attempt);
+      
+      // Sync with Spring Boot Backend (MySQL)
+      try {
+        await fetch(`http://localhost:8080/api/quizzes/${quiz.id}/attempts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(attempt)
+        });
+      } catch (syncErr) {
+        console.warn('Failed to sync quiz attempt with local backend:', syncErr);
+      }
+
       setResult({ id: docRef.id, ...attempt });
       setQuizState('result');
     } catch (err) {

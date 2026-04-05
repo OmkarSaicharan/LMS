@@ -40,4 +40,4 @@ This is the backend for the College LMS application, built with Spring Boot, JPA
 
 ## Integration with Frontend
 
-To connect your React frontend to this backend, you should replace the direct Firestore calls with `fetch` or `axios` calls to `http://localhost:8080/api/...`.
+The React frontend has been updated to sync data with this backend using Firebase IDs as primary keys for consistency. Direct Firestore calls are still used for real-time features, but all persistence operations now also hit `http://localhost:8080/api/...`.

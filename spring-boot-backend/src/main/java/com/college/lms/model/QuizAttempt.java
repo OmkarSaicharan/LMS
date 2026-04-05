@@ -11,7 +11,7 @@ public class QuizAttempt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long quizId;
+    private String quizId;
     private String quizTitle;
     private String studentId;
     private String studentName;

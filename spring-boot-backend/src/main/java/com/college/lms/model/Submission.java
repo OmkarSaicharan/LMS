@@ -11,7 +11,7 @@ public class Submission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long assignmentId;
+    private String assignmentId;
     private String studentId;
     private String studentName;
     private String studentInstitutionalId;

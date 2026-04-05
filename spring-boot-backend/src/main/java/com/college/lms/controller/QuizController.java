@@ -31,18 +31,18 @@ public class QuizController {
     }
 
     @GetMapping("/{id}")
-    public Quiz getQuiz(@PathVariable Long id) {
+    public Quiz getQuiz(@PathVariable String id) {
         return quizRepository.findById(id).orElse(null);
     }
 
     @PostMapping("/{id}/attempts")
-    public QuizAttempt submitAttempt(@PathVariable Long id, @RequestBody QuizAttempt attempt) {
+    public QuizAttempt submitAttempt(@PathVariable String id, @RequestBody QuizAttempt attempt) {
         attempt.setQuizId(id);
         return attemptRepository.save(attempt);
     }
 
     @GetMapping("/{id}/attempts")
-    public List<QuizAttempt> getQuizAttempts(@PathVariable Long id) {
+    public List<QuizAttempt> getQuizAttempts(@PathVariable String id) {
         return attemptRepository.findByQuizId(id);
     }
 }

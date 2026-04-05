@@ -90,7 +90,7 @@ const AssignmentPage: React.FC = () => {
       await uploadBytes(storageRef, file);
       const pdfUrl = await getDownloadURL(storageRef);
 
-      await addDoc(collection(db, `assignments/${assignmentId}/submissions`), {
+      const submission = {
         assignmentId,
         studentId: profile.uid,
         studentName: profile.displayName,
@@ -98,7 +98,20 @@ const AssignmentPage: React.FC = () => {
         pdfUrl,
         submittedAt: new Date().toISOString(),
         status: 'submitted'
-      });
+      };
+
+      await addDoc(collection(db, `assignments/${assignmentId}/submissions`), submission);
+
+      // Sync with Spring Boot Backend (MySQL)
+      try {
+        await fetch(`http://localhost:8080/api/assignments/${assignmentId}/submissions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(submission)
+        });
+      } catch (syncErr) {
+        console.warn('Failed to sync assignment submission with local backend:', syncErr);
+      }
 
       alert('Assignment submitted successfully!');
     } catch (err) {

@@ -134,8 +134,30 @@ const AdminPortal: React.FC = () => {
     try {
       if (editingCourse) {
         await updateDoc(doc(db, 'courses', editingCourse.id), courseData);
+        
+        // Sync with Spring Boot Backend (MySQL)
+        try {
+          await fetch(`http://localhost:8080/api/courses/${editingCourse.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(courseData)
+          });
+        } catch (syncErr) {
+          console.warn('Failed to sync course update with local backend:', syncErr);
+        }
       } else {
-        await addDoc(collection(db, 'courses'), courseData);
+        const docRef = await addDoc(collection(db, 'courses'), courseData);
+        
+        // Sync with Spring Boot Backend (MySQL)
+        try {
+          await fetch('http://localhost:8080/api/courses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(courseData)
+          });
+        } catch (syncErr) {
+          console.warn('Failed to sync course creation with local backend:', syncErr);
+        }
       }
       setShowCourseModal(false);
       setEditingCourse(null);
@@ -148,6 +170,15 @@ const AdminPortal: React.FC = () => {
     if (window.confirm('Are you sure you want to delete this course?')) {
       try {
         await deleteDoc(doc(db, 'courses', id));
+        
+        // Sync with Spring Boot Backend (MySQL)
+        try {
+          await fetch(`http://localhost:8080/api/courses/${id}`, {
+            method: 'DELETE'
+          });
+        } catch (syncErr) {
+          console.warn('Failed to sync course deletion with local backend:', syncErr);
+        }
       } catch (err) {
         console.error(err);
       }

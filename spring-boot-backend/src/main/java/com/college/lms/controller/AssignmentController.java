@@ -31,18 +31,18 @@ public class AssignmentController {
     }
 
     @GetMapping("/{id}")
-    public Assignment getAssignment(@PathVariable Long id) {
+    public Assignment getAssignment(@PathVariable String id) {
         return assignmentRepository.findById(id).orElse(null);
     }
 
     @PostMapping("/{id}/submissions")
-    public Submission submitAssignment(@PathVariable Long id, @RequestBody Submission submission) {
+    public Submission submitAssignment(@PathVariable String id, @RequestBody Submission submission) {
         submission.setAssignmentId(id);
         return submissionRepository.save(submission);
     }
 
     @GetMapping("/{id}/submissions")
-    public List<Submission> getSubmissions(@PathVariable Long id) {
+    public List<Submission> getSubmissions(@PathVariable String id) {
         return submissionRepository.findByAssignmentId(id);
     }
 }
