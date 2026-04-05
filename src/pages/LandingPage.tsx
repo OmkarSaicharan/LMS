@@ -88,7 +88,16 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white overflow-x-hidden">
+    <div className="min-h-screen bg-transparent overflow-x-hidden relative">
+      {/* Global Background Image */}
+      <div className="fixed inset-0 -z-30">
+        <img 
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfO2tuVK81u9TH4y0rqqaO9dWAeWMZWtP6bw&s" 
+          alt="Background" 
+          className="w-full h-full object-cover opacity-100"
+          referrerPolicy="no-referrer"
+        />
+      </div>
       {/* University Header Banner */}
       <div className="w-full bg-[#9e1c21] overflow-hidden sticky top-0 z-[60]">
         <img 
@@ -100,7 +109,7 @@ const LandingPage: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-[96px] w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-[96px] w-full z-50 bg-white/40 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm">
             <img 
@@ -124,15 +133,8 @@ const LandingPage: React.FC = () => {
       </nav>
 
       {/* Hero Section with Parallax */}
-      <section className="relative pt-12 pb-20 px-6 overflow-hidden">
-        <motion.div 
-          style={{ y: y1 }}
-          className="absolute top-20 -right-20 w-96 h-96 bg-indigo-50 rounded-full blur-3xl -z-10"
-        />
-        <motion.div 
-          style={{ y: y2 }}
-          className="absolute bottom-0 -left-20 w-80 h-80 bg-blue-50 rounded-full blur-3xl -z-10"
-        />
+      <section className="relative pt-12 pb-20 px-6 overflow-hidden min-h-[80vh] flex items-center">
+        {/* Removed decorative blurs for clarity */}
 
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -149,21 +151,23 @@ const LandingPage: React.FC = () => {
               />
             </div>
             <h1 className="text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
-              Empowering the <span className="text-indigo-600">Next Generation</span> of Learners
+              Empowering the <span className="text-[#9e1c21]">Next Generation</span> of Learners
             </h1>
-            <p className="text-xl text-slate-600 mb-8 leading-relaxed max-w-lg">
-              A comprehensive learning management system designed for modern colleges. 
-              Streamline courses, quizzes, and assignments in one secure platform.
-            </p>
+            <div className="bg-[#9e1c21] p-6 mb-8 max-w-lg shadow-xl">
+              <p className="text-xl text-white leading-relaxed">
+                A comprehensive learning management system designed for modern colleges. 
+                Streamline courses, quizzes, and assignments in one secure platform.
+              </p>
+            </div>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-white rounded-3xl shadow-2xl shadow-indigo-100 border border-slate-100 p-8 md:p-10"
+            className="bg-white/70 rounded-3xl shadow-2xl shadow-indigo-100 border border-slate-100 p-8 md:p-10"
           >
-            <div className="flex gap-2 p-1 bg-slate-100 rounded-2xl mb-8">
+            <div className="flex gap-2 p-1 bg-white/20 rounded-2xl mb-8">
               {!showAdminLogin && (
                 <>
                   <button 
@@ -216,7 +220,7 @@ const LandingPage: React.FC = () => {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="John Doe"
-                      className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                      className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
                     />
                   </div>
                 </div>
@@ -232,7 +236,7 @@ const LandingPage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@college.edu"
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                    className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
                   />
                 </div>
               </div>
@@ -247,7 +251,7 @@ const LandingPage: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                    className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
                   />
                 </div>
               </div>
@@ -293,11 +297,11 @@ const LandingPage: React.FC = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-slate-50 px-6">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-24 bg-transparent px-6">
+        <div className="max-w-7xl mx-auto bg-[#9e1c21]/90 rounded-[3rem] p-12 md:p-20 shadow-2xl shadow-red-900/20">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Everything you need to succeed</h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-white mb-4">Everything you need to succeed</h2>
+            <p className="text-red-50 max-w-2xl mx-auto font-medium">
               Our LMS provides a comprehensive set of tools for students and faculty to manage their academic journey.
             </p>
           </div>
@@ -315,9 +319,9 @@ const LandingPage: React.FC = () => {
               <motion.div
                 key={i}
                 whileHover={{ y: -10 }}
-                className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm"
+                className="bg-white/0 p-8 rounded-3xl border border-white/10 shadow-lg"
               >
-                <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 overflow-hidden">
+                <div className="w-14 h-14 bg-white text-[#9e1c21] rounded-2xl flex items-center justify-center mb-6 overflow-hidden shadow-lg">
                   {feature.icon ? (
                     <feature.icon size={28} />
                   ) : (
@@ -329,8 +333,8 @@ const LandingPage: React.FC = () => {
                     />
                   )}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{feature.desc}</p>
+                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                <p className="text-red-50 leading-relaxed opacity-90">{feature.desc}</p>
               </motion.div>
             ))}
           </div>
