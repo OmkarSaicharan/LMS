@@ -94,7 +94,7 @@ const AssignmentPage: React.FC = () => {
         assignmentId,
         studentId: profile.uid,
         studentName: profile.displayName,
-        studentInstitutionalId: profile.institutionalId,
+        studentInstitutionalId: profile.institutionalId || 'N/A',
         pdfUrl,
         submittedAt: new Date().toISOString(),
         status: 'submitted'

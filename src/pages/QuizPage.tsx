@@ -152,7 +152,7 @@ const QuizPage: React.FC = () => {
       quizTitle: quiz.title,
       studentId: profile.uid,
       studentName: profile.displayName,
-      studentInstitutionalId: profile.institutionalId,
+      studentInstitutionalId: profile.institutionalId || 'N/A',
       score: Math.round(score * 100) / 100,
       totalQuestions: questions.length,
       correctAnswers: correct,
