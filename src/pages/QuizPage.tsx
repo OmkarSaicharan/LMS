@@ -49,6 +49,8 @@ const QuizPage: React.FC = () => {
 
   // Edit state
   const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [showEditQuizModal, setShowEditQuizModal] = useState(false);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     if (!quizId) return;
@@ -177,6 +179,34 @@ const QuizPage: React.FC = () => {
     }
   };
 
+  const handleUpdateQuiz = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!quizId || !quiz) return;
+
+    setUpdating(true);
+    const formData = new FormData(e.currentTarget);
+    const updatedData = {
+      title: formData.get('title') as string,
+      description: formData.get('description') as string,
+      date: formData.get('date') as string,
+      startTime: formData.get('startTime') as string,
+      endTime: formData.get('endTime') as string,
+      duration: parseInt(formData.get('duration') as string),
+      totalMarks: parseInt(formData.get('totalMarks') as string),
+    };
+
+    try {
+      await updateDoc(doc(db, 'quizzes', quizId), updatedData);
+      setQuiz({ ...quiz, ...updatedData });
+      setShowEditQuizModal(false);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update quiz');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
   if (loading) return <div className="flex items-center justify-center h-64"><Loader2 className="animate-spin text-indigo-600" size={32} /></div>;
   if (!quiz) return <div className="text-center p-12">Quiz not found</div>;
 
@@ -231,12 +261,20 @@ const QuizPage: React.FC = () => {
                 </button>
               )}
               {(isAdmin || isFaculty) && (
-                <button 
-                  onClick={() => setQuizState('editing')}
-                  className="flex-1 py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-all"
-                >
-                  Manage Questions ({questions.length})
-                </button>
+                <>
+                  <button 
+                    onClick={() => setQuizState('editing')}
+                    className="flex-1 py-4 bg-white border border-slate-200 text-slate-700 rounded-2xl font-bold hover:bg-slate-50 transition-all"
+                  >
+                    Manage Questions ({questions.length})
+                  </button>
+                  <button 
+                    onClick={() => setShowEditQuizModal(true)}
+                    className="flex-1 py-4 bg-indigo-50 text-indigo-700 rounded-2xl font-bold hover:bg-indigo-100 transition-all"
+                  >
+                    Edit Details
+                  </button>
+                </>
               )}
             </div>
           </motion.div>
@@ -385,9 +423,17 @@ const QuizPage: React.FC = () => {
             className="space-y-6"
           >
             <div className="flex items-center justify-between">
-              <button onClick={() => setQuizState('info')} className="text-sm font-bold text-indigo-600 hover:underline flex items-center gap-1">
-                Back to Quiz Info
-              </button>
+              <div className="flex items-center gap-4">
+                <button onClick={() => setQuizState('info')} className="text-sm font-bold text-indigo-600 hover:underline flex items-center gap-1">
+                  Back to Quiz Info
+                </button>
+                <button 
+                  onClick={() => setShowEditQuizModal(true)}
+                  className="text-sm font-bold text-slate-600 hover:text-indigo-600 flex items-center gap-1"
+                >
+                  Edit Quiz Details
+                </button>
+              </div>
               <button 
                 onClick={() => setShowQuestionModal(true)}
                 className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center gap-2"
@@ -477,6 +523,64 @@ const QuizPage: React.FC = () => {
                 className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all"
               >
                 Save Question
+              </button>
+            </form>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Edit Quiz Modal */}
+      {showEditQuizModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-white rounded-3xl shadow-2xl w-full max-w-lg overflow-hidden"
+          >
+            <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+              <h2 className="text-xl font-bold text-slate-900">Edit Quiz Details</h2>
+              <button onClick={() => setShowEditQuizModal(false)} className="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                <XCircle size={24} />
+              </button>
+            </div>
+            <form onSubmit={handleUpdateQuiz} className="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700">Quiz Title</label>
+                <input name="title" defaultValue={quiz.title} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700">Description</label>
+                <textarea name="description" defaultValue={quiz.description} className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 h-24" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">Date</label>
+                  <input type="date" name="date" defaultValue={quiz.date} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">Duration (mins)</label>
+                  <input type="number" name="duration" defaultValue={quiz.duration} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">Start Time</label>
+                  <input type="time" name="startTime" defaultValue={quiz.startTime} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-bold text-slate-700">End Time</label>
+                  <input type="time" name="endTime" defaultValue={quiz.endTime} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-slate-700">Total Marks</label>
+                <input type="number" name="totalMarks" defaultValue={quiz.totalMarks} required className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-2 focus:ring-indigo-500" />
+              </div>
+              <button 
+                disabled={updating}
+                className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+              >
+                {updating ? <Loader2 className="animate-spin" size={20} /> : 'Update Quiz Details'}
               </button>
             </form>
           </motion.div>

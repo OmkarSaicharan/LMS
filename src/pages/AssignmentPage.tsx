@@ -181,7 +181,7 @@ const AssignmentPage: React.FC = () => {
                 </div>
               ) : (
                 <form onSubmit={handleFileUpload} className="space-y-6">
-                  <div className="p-12 border-2 border-dashed border-slate-200 rounded-3xl text-center space-y-4 hover:border-indigo-300 transition-all group">
+                  <div className="relative p-12 border-2 border-dashed border-slate-200 rounded-3xl text-center space-y-4 hover:border-indigo-300 transition-all group">
                     <div className="w-16 h-16 bg-slate-50 text-slate-400 rounded-2xl flex items-center justify-center mx-auto group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-all">
                       <FileText size={32} />
                     </div>
