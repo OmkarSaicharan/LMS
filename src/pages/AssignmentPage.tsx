@@ -318,7 +318,7 @@ const AssignmentPage: React.FC = () => {
             <p className="text-indigo-100 text-xs leading-relaxed mb-4">
               If you encounter any issues with your submission, please contact your course faculty or the IT support team.
             </p>
-            <button className="w-full py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all">
+            <button className="w-full py-2 bg-slate-100 hover:bg-slate-200 rounded-xl text-xs font-bold transition-all">
               Contact Support
             </button>
           </section>

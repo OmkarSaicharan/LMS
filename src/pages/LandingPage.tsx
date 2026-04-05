@@ -90,9 +90,9 @@ const LandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-transparent overflow-x-hidden relative">
       {/* Global Background Image */}
-      <div className="fixed inset-0 -z-30">
+      <div className="fixed inset-0 -z-10">
         <img 
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfO2tuVK81u9TH4y0rqqaO9dWAeWMZWtP6bw&s" 
+          src="https://www.kluniversity.in/blog/images/best-engineering-university.jpg" 
           alt="Background" 
           className="w-full h-full object-cover opacity-100"
           referrerPolicy="no-referrer"
@@ -236,7 +236,7 @@ const LandingPage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@college.edu"
-                    className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
                   />
                 </div>
               </div>
@@ -251,7 +251,7 @@ const LandingPage: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
                   />
                 </div>
               </div>

@@ -38,17 +38,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-transparent flex flex-col relative">
-      {/* Global Background Image */}
-      <div className="fixed inset-0 -z-30">
-        <img 
-          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfO2tuVK81u9TH4y0rqqaO9dWAeWMZWtP6bw&s" 
-          alt="Background" 
-          className="w-full h-full object-cover opacity-100"
-          referrerPolicy="no-referrer"
-        />
-      </div>
-
+    <div className="min-h-screen bg-slate-50 flex flex-col relative">
       {/* University Header Banner */}
       <div className="w-full bg-[#9e1c21] overflow-hidden sticky top-0 z-[60]">
         <img 
@@ -61,7 +51,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       <div className="flex flex-1 flex-col md:flex-row relative">
         {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-white/40 border-r border-slate-200 sticky top-[96px] h-[calc(100vh-96px)]">
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 sticky top-[96px] h-[calc(100vh-96px)]">
         <div className="p-6 flex items-center gap-3 border-b border-slate-100">
           <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm">
             <img 
