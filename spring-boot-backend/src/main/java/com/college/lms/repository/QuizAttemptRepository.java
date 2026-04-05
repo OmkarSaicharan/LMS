@@ -9,4 +9,5 @@ import java.util.List;
 public interface QuizAttemptRepository extends JpaRepository<QuizAttempt, Long> {
     List<QuizAttempt> findByQuizId(String quizId);
     List<QuizAttempt> findByStudentId(String studentId);
+    List<QuizAttempt> findAllByOrderBySubmittedAtDesc();
 }

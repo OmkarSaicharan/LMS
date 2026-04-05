@@ -45,4 +45,14 @@ public class QuizController {
     public List<QuizAttempt> getQuizAttempts(@PathVariable String id) {
         return attemptRepository.findByQuizId(id);
     }
+
+    @GetMapping("/course/{courseId}")
+    public List<Quiz> getQuizzesByCourse(@PathVariable String courseId) {
+        return quizRepository.findByCourseId(courseId);
+    }
+
+    @GetMapping("/attempts")
+    public List<QuizAttempt> getAllAttempts() {
+        return attemptRepository.findAllByOrderBySubmittedAtDesc();
+    }
 }
