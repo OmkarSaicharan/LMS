@@ -223,14 +223,19 @@ const Dashboard: React.FC = () => {
                         {result.score} pts
                       </span>
                     </div>
-                    <div className="flex items-center justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                      <span className="flex items-center gap-1">
-                        <User size={12} className="text-indigo-400" />
-                        {result.studentName}
-                      </span>
-                      <span>
-                        {format(new Date(result.submittedAt), 'MMM dd, hh:mm a')}
-                      </span>
+                    <div className="flex flex-col gap-1 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                      <div className="flex items-center justify-between">
+                        <span className="flex items-center gap-1">
+                          <User size={12} className="text-indigo-400" />
+                          {result.studentName}
+                        </span>
+                        <span>
+                          {format(new Date(result.submittedAt), 'MMM dd, hh:mm a')}
+                        </span>
+                      </div>
+                      <div className="text-[9px] text-slate-400 font-mono truncate">
+                        ID: {result.studentInstitutionalId}
+                      </div>
                     </div>
                   </div>
                 )) : (

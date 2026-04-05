@@ -93,6 +93,8 @@ const AssignmentPage: React.FC = () => {
       await addDoc(collection(db, `assignments/${assignmentId}/submissions`), {
         assignmentId,
         studentId: profile.uid,
+        studentName: profile.displayName,
+        studentInstitutionalId: profile.institutionalId,
         pdfUrl,
         submittedAt: new Date().toISOString(),
         status: 'submitted'
@@ -235,7 +237,10 @@ const AssignmentPage: React.FC = () => {
                             <div className="w-8 h-8 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center font-bold text-xs">
                               <User size={14} />
                             </div>
-                            <span className="text-sm font-bold text-slate-900">{sub.studentId.substring(0, 8)}...</span>
+                            <div>
+                              <p className="text-sm font-bold text-slate-900">{sub.studentName}</p>
+                              <p className="text-[10px] text-slate-400 font-mono">ID: {sub.studentInstitutionalId}</p>
+                            </div>
                           </div>
                         </td>
                         <td className="px-6 py-4">

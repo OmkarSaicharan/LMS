@@ -5,6 +5,7 @@ export interface UserProfile {
   email: string;
   role: UserRole;
   displayName: string;
+  institutionalId: string; // Student ID or Faculty ID
   photoURL?: string;
   createdAt: string;
   isActive: boolean;
@@ -64,6 +65,7 @@ export interface QuizAttempt {
   quizTitle: string;
   studentId: string;
   studentName: string;
+  studentInstitutionalId: string;
   score: number;
   totalQuestions: number;
   correctAnswers: number;
@@ -86,6 +88,8 @@ export interface AssignmentSubmission {
   id: string;
   assignmentId: string;
   studentId: string;
+  studentName: string;
+  studentInstitutionalId: string;
   pdfUrl: string;
   submittedAt: string;
   status: 'submitted' | 'reviewed';

@@ -31,6 +31,7 @@ const LandingPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [institutionalId, setInstitutionalId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -58,6 +59,7 @@ const LandingPage: React.FC = () => {
           email: user.email,
           role: finalRole,
           displayName: name,
+          institutionalId: institutionalId,
           createdAt: new Date().toISOString(),
           isActive: true
         };
@@ -210,20 +212,36 @@ const LandingPage: React.FC = () => {
               )}
 
               {authMode === 'signup' && !showAdminLogin && (
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
-                  <div className="relative">
-                    <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <input 
-                      type="text" 
-                      required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      placeholder="John Doe"
-                      className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
-                    />
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700 ml-1">Full Name</label>
+                    <div className="relative">
+                      <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <input 
+                        type="text" 
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="John Doe"
+                        className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-700 ml-1">{role === 'student' ? 'Student ID' : 'Faculty ID'}</label>
+                    <div className="relative">
+                      <GraduationCap className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                      <input 
+                        type="text" 
+                        required
+                        value={institutionalId}
+                        onChange={(e) => setInstitutionalId(e.target.value)}
+                        placeholder={role === 'student' ? "2200030000" : "F1234"}
+                        className="w-full pl-12 pr-4 py-4 bg-white/20 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all outline-none"
+                      />
+                    </div>
+                  </div>
+                </>
               )}
 
               <div className="space-y-2">

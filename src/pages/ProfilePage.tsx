@@ -10,7 +10,8 @@ import {
   Loader2,
   CheckCircle2,
   LogOut,
-  Lock
+  Lock,
+  GraduationCap
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '../lib/utils';
@@ -93,6 +94,13 @@ const ProfilePage: React.FC = () => {
                 <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <Mail size={18} className="text-slate-400" />
                   <span className="font-bold text-slate-700">{profile.email}</span>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">{profile.role === 'student' ? 'Student ID' : 'Faculty ID'}</label>
+                <div className="flex items-center gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                  <GraduationCap size={18} className="text-slate-400" />
+                  <span className="font-bold text-slate-700">{profile.institutionalId}</span>
                 </div>
               </div>
               <div className="space-y-2">

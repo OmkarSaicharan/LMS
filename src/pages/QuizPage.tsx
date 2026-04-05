@@ -26,7 +26,9 @@ import {
   Timer,
   Trophy,
   XCircle,
-  Calendar
+  Calendar,
+  Edit2,
+  User
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '../lib/utils';
@@ -39,13 +41,14 @@ const QuizPage: React.FC = () => {
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [loading, setLoading] = useState(true);
-  const [quizState, setQuizState] = useState<'info' | 'attempting' | 'result' | 'editing'>('info');
+  const [quizState, setQuizState] = useState<'info' | 'attempting' | 'result' | 'editing' | 'results'>('info');
   
   // Attempt state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [timeLeft, setTimeLeft] = useState(0);
   const [result, setResult] = useState<QuizAttempt | null>(null);
+  const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
 
   // Edit state
   const [showQuestionModal, setShowQuestionModal] = useState(false);
@@ -73,8 +76,19 @@ const QuizPage: React.FC = () => {
       (snapshot) => setQuestions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as QuizQuestion)))
     );
 
-    return () => unsubscribeQuestions();
-  }, [quizId]);
+    let unsubscribeAttempts: () => void = () => {};
+    if (isAdmin || isFaculty) {
+      unsubscribeAttempts = onSnapshot(
+        query(collection(db, 'quizAttempts'), where('quizId', '==', quizId)),
+        (snapshot) => setAttempts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as QuizAttempt)))
+      );
+    }
+
+    return () => {
+      unsubscribeQuestions();
+      unsubscribeAttempts();
+    };
+  }, [quizId, isAdmin, isFaculty]);
 
   useEffect(() => {
     let timer: any;
@@ -138,6 +152,7 @@ const QuizPage: React.FC = () => {
       quizTitle: quiz.title,
       studentId: profile.uid,
       studentName: profile.displayName,
+      studentInstitutionalId: profile.institutionalId,
       score: Math.round(score * 100) / 100,
       totalQuestions: questions.length,
       correctAnswers: correct,
@@ -271,10 +286,17 @@ const QuizPage: React.FC = () => {
                     Manage Questions ({questions.length})
                   </button>
                   <button 
-                    onClick={() => setShowEditQuizModal(true)}
+                    onClick={() => setQuizState('results')}
                     className="flex-1 py-4 bg-indigo-50 text-indigo-700 rounded-2xl font-bold hover:bg-indigo-100 transition-all"
                   >
-                    Edit Details
+                    View Results ({attempts.length})
+                  </button>
+                  <button 
+                    onClick={() => setShowEditQuizModal(true)}
+                    className="p-4 bg-slate-50 text-slate-600 rounded-2xl font-bold hover:bg-slate-100 transition-all"
+                    title="Edit Quiz Details"
+                  >
+                    <Edit2 size={24} />
                   </button>
                 </>
               )}
@@ -429,6 +451,86 @@ const QuizPage: React.FC = () => {
               >
                 Review Answers
               </button>
+            </div>
+          </motion.div>
+        )}
+
+        {quizState === 'results' && (
+          <motion.div
+            key="results"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="space-y-6"
+          >
+            <div className="flex items-center justify-between">
+              <button 
+                onClick={() => setQuizState('info')}
+                className="text-sm font-bold text-slate-500 hover:text-indigo-600 flex items-center gap-2"
+              >
+                <ChevronRight size={18} className="rotate-180" />
+                Back to Info
+              </button>
+              <h2 className="text-2xl font-black text-slate-900">Quiz Submissions</h2>
+            </div>
+
+            <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-slate-50 border-b border-slate-100">
+                      <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Student</th>
+                      <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Score</th>
+                      <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Stats</th>
+                      <th className="px-6 py-4 text-xs font-black text-slate-500 uppercase tracking-widest">Submitted At</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {attempts.length > 0 ? attempts.map((attempt) => (
+                      <tr key={attempt.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center font-black text-sm">
+                              {attempt.studentName.charAt(0)}
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-slate-900">{attempt.studentName}</p>
+                              <p className="text-[10px] text-slate-400 font-mono">ID: {attempt.studentInstitutionalId}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <span className="px-3 py-1 bg-indigo-600 text-white text-xs font-black rounded-full">
+                            {attempt.score} / 100
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="flex gap-2">
+                            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">
+                              {attempt.correctAnswers} Correct
+                            </span>
+                            <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md">
+                              {attempt.wrongAnswers} Wrong
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="text-xs font-bold text-slate-500">
+                            {format(new Date(attempt.submittedAt), 'MMM dd, hh:mm a')}
+                          </p>
+                        </td>
+                      </tr>
+                    )) : (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-12 text-center">
+                          <Trophy className="mx-auto text-slate-200 mb-4" size={48} />
+                          <p className="text-slate-500 font-medium">No submissions yet.</p>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </motion.div>
         )}
