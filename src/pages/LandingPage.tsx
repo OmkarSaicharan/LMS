@@ -89,11 +89,26 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
+      {/* University Header Banner */}
+      <div className="w-full bg-[#9e1c21] overflow-hidden sticky top-0 z-[60]">
+        <img 
+          src="https://www.kluniversity.in/img/KLU-Hedder-main.jpg" 
+          alt="KLU Header" 
+          className="w-full h-auto max-h-24 object-contain mx-auto"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-[96px] w-full z-50 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
-            <GraduationCap size={24} />
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm">
+            <img 
+              src="https://www.kluniversity.in/img/KLU-Hedder-main.jpg" 
+              alt="KLU Logo" 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <span className="text-xl font-bold text-slate-900 tracking-tight">College LMS</span>
         </div>
@@ -109,7 +124,7 @@ const LandingPage: React.FC = () => {
       </nav>
 
       {/* Hero Section with Parallax */}
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+      <section className="relative pt-12 pb-20 px-6 overflow-hidden">
         <motion.div 
           style={{ y: y1 }}
           className="absolute top-20 -right-20 w-96 h-96 bg-indigo-50 rounded-full blur-3xl -z-10"
@@ -292,7 +307,11 @@ const LandingPage: React.FC = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {[
               { title: 'Course Management', desc: 'Admin can easily manage courses and assign faculty to them.', icon: BookOpen },
-              { title: 'Interactive Quizzes', desc: 'Faculty can create and schedule quizzes with instant results.', icon: GraduationCap },
+              { 
+                title: 'Interactive Quizzes', 
+                desc: 'Faculty can create and schedule quizzes with instant results.', 
+                img: "https://www.kluniversity.in/img/KLU-Hedder-main.jpg" 
+              },
               { title: 'Assignment Tracking', desc: 'Submit and review assignments with CO-based mapping.', icon: CheckCircle2 }
             ].map((feature, i) => (
               <motion.div
@@ -300,8 +319,17 @@ const LandingPage: React.FC = () => {
                 whileHover={{ y: -10 }}
                 className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm"
               >
-                <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
-                  <feature.icon size={28} />
+                <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6 overflow-hidden">
+                  {feature.icon ? (
+                    <feature.icon size={28} />
+                  ) : (
+                    <img 
+                      src={feature.img} 
+                      alt={feature.title} 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
                 </div>
                 <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
                 <p className="text-slate-600 leading-relaxed">{feature.desc}</p>

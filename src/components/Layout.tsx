@@ -38,12 +38,28 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* Sidebar - Desktop */}
-      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 sticky top-0 h-screen">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* University Header Banner */}
+      <div className="w-full bg-[#9e1c21] overflow-hidden sticky top-0 z-[60]">
+        <img 
+          src="https://www.kluniversity.in/img/KLU-Hedder-main.jpg" 
+          alt="KLU Header" 
+          className="w-full h-auto max-h-24 object-contain mx-auto"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+
+      <div className="flex flex-1 flex-col md:flex-row relative">
+        {/* Sidebar - Desktop */}
+      <aside className="hidden md:flex flex-col w-64 bg-white border-r border-slate-200 sticky top-[96px] h-[calc(100vh-96px)]">
         <div className="p-6 flex items-center gap-3 border-b border-slate-100">
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white">
-            <GraduationCap size={24} />
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm">
+            <img 
+              src="https://www.kluniversity.in/img/KLU-Hedder-main.jpg" 
+              alt="KLU Logo" 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <div>
             <h1 className="font-bold text-slate-900 leading-tight">College LMS</h1>
@@ -83,10 +99,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       </aside>
 
       {/* Header - Mobile */}
-      <header className="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-50">
+      <header className="md:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-[96px] z-50">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white">
-            <GraduationCap size={18} />
+          <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center overflow-hidden border border-slate-100 shadow-sm">
+            <img 
+              src="https://www.kluniversity.in/img/KLU-Hedder-main.jpg" 
+              alt="KLU Logo" 
+              className="w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
           </div>
           <span className="font-bold text-slate-900">College LMS</span>
         </div>
@@ -142,6 +163,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           {children}
         </div>
       </main>
+      </div>
     </div>
   );
 };
