@@ -1,0 +1,5 @@
+{
+  "name": "College LMS",
+  "description": "A comprehensive Learning Management System for colleges with role-based access for Admin, Faculty, and Students.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin') || 
+        request.auth.token.email == "A@gmail.com"
+      );
+    }
+    
+    function isFaculty() {
+      return isAuthenticated() && getUserData().role == 'faculty';
+    }
+    
+    function isStudent() {
+      return isAuthenticated() && getUserData().role == 'student';
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow create: if isAuthenticated() && isOwner(userId);
+      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    match /courses/{courseId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /notes/{noteId} {
+      allow read: if isAuthenticated();
+      allow create: if isFaculty() || isAdmin();
+      allow update, delete: if isAdmin() || (isFaculty() && resource.data.facultyId == request.auth.uid);
+    }
+
+    match /quizzes/{quizId} {
+      allow read: if isAuthenticated();
+      allow create: if isFaculty() || isAdmin();
+      allow update, delete: if isAdmin() || (isFaculty() && resource.data.facultyId == request.auth.uid);
+      
+      match /questions/{questionId} {
+        allow read: if isAuthenticated();
+        allow write: if isAdmin() || isFaculty();
+      }
+    }
+
+    match /quizAttempts/{attemptId} {
+      allow read: if isAuthenticated() && (isOwner(resource.data.studentId) || isFaculty() || isAdmin());
+      allow create: if isStudent();
+      allow update, delete: if isAdmin();
+    }
+
+    match /assignments/{assignmentId} {
+      allow read: if isAuthenticated();
+      allow create: if isFaculty() || isAdmin();
+      allow update, delete: if isAdmin() || (isFaculty() && resource.data.facultyId == request.auth.uid);
+      
+      match /submissions/{submissionId} {
+        allow read: if isAuthenticated() && (isOwner(resource.data.studentId) || isFaculty() || isAdmin());
+        allow create: if isStudent();
+        allow update: if isAuthenticated() && (isOwner(resource.data.studentId) || isFaculty() || isAdmin());
+        allow delete: if isAdmin();
+      }
+    }
+
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isAuthenticated(); // Notifications can be triggered by system/faculty
+      allow update, delete: if isAuthenticated() && (isOwner(resource.data.userId) || isAdmin());
+    }
+  }
+}

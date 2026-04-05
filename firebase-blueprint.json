@@ -1,0 +1,151 @@
+{
+  "entities": {
+    "users": {
+      "title": "User",
+      "description": "Stores user profile information and roles.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["admin", "faculty", "student"] },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string", "format": "uri" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "courses": {
+      "title": "Course",
+      "description": "Stores course details and assigned faculty.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "code": { "type": "string" },
+        "description": { "type": "string" },
+        "semester": { "type": "string" },
+        "department": { "type": "string" },
+        "facultyIds": { "type": "array", "items": { "type": "string" } },
+        "isActive": { "type": "boolean" },
+        "coList": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "code", "isActive"]
+    },
+    "notes": {
+      "title": "Note",
+      "description": "Stores uploaded PDF notes and CO mapping.",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string" },
+        "facultyId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "pdfUrl": { "type": "string", "format": "uri" },
+        "coMapping": { "type": "string", "enum": ["CO1", "CO2", "CO3", "CO4", "CO5"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["courseId", "facultyId", "title", "pdfUrl"]
+    },
+    "quizzes": {
+      "title": "Quiz",
+      "description": "Stores quiz metadata and scheduling.",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string" },
+        "facultyId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "startTime": { "type": "string" },
+        "endTime": { "type": "string" },
+        "duration": { "type": "integer" },
+        "totalMarks": { "type": "integer" },
+        "isPublished": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["courseId", "facultyId", "title", "date", "startTime", "endTime"]
+    },
+    "quizQuestions": {
+      "title": "QuizQuestion",
+      "description": "Stores individual MCQ questions for a quiz.",
+      "type": "object",
+      "properties": {
+        "quizId": { "type": "string" },
+        "question": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" } },
+        "correctAnswerIndex": { "type": "integer" },
+        "coMapping": { "type": "string" }
+      },
+      "required": ["quizId", "question", "options", "correctAnswerIndex"]
+    },
+    "quizAttempts": {
+      "title": "QuizAttempt",
+      "description": "Stores student quiz results.",
+      "type": "object",
+      "properties": {
+        "quizId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "score": { "type": "number" },
+        "totalQuestions": { "type": "integer" },
+        "correctAnswers": { "type": "integer" },
+        "wrongAnswers": { "type": "integer" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["quizId", "studentId", "score"]
+    },
+    "assignments": {
+      "title": "Assignment",
+      "description": "Stores assignment details.",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string" },
+        "facultyId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "dueDate": { "type": "string", "format": "date-time" },
+        "coMapping": { "type": "string", "enum": ["Home Assignment", "CO1", "CO2", "CO3", "CO4", "CO5"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["courseId", "facultyId", "title", "dueDate"]
+    },
+    "assignmentSubmissions": {
+      "title": "AssignmentSubmission",
+      "description": "Stores student assignment PDF uploads.",
+      "type": "object",
+      "properties": {
+        "assignmentId": { "type": "string" },
+        "studentId": { "type": "string" },
+        "pdfUrl": { "type": "string", "format": "uri" },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["submitted", "reviewed"] }
+      },
+      "required": ["assignmentId", "studentId", "pdfUrl"]
+    },
+    "notifications": {
+      "title": "Notification",
+      "description": "Stores user notifications.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "type": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "message"]
+    }
+  },
+  "firestore": {
+    "/users/{uid}": { "schema": "users", "description": "User profiles" },
+    "/courses/{courseId}": { "schema": "courses", "description": "Course information" },
+    "/notes/{noteId}": { "schema": "notes", "description": "Course notes" },
+    "/quizzes/{quizId}": { "schema": "quizzes", "description": "Quizzes" },
+    "/quizzes/{quizId}/questions/{questionId}": { "schema": "quizQuestions", "description": "Quiz questions" },
+    "/quizAttempts/{attemptId}": { "schema": "quizAttempts", "description": "Student quiz attempts" },
+    "/assignments/{assignmentId}": { "schema": "assignments", "description": "Assignments" },
+    "/assignments/{assignmentId}/submissions/{submissionId}": { "schema": "assignmentSubmissions", "description": "Assignment submissions" },
+    "/notifications/{notificationId}": { "schema": "notifications", "description": "User notifications" }
+  }
+}
