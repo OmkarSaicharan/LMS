@@ -140,6 +140,14 @@ const LandingPage: React.FC = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
+            <div className="mb-8">
+              <img 
+                src="https://lms.kluniversity.in/pluginfile.php/1/theme_lambda/logo/1767415413/kl.png" 
+                alt="KLU LMS Logo" 
+                className="h-32 w-auto object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
             <h1 className="text-5xl lg:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6">
               Empowering the <span className="text-indigo-600">Next Generation</span> of Learners
             </h1>
@@ -147,16 +155,6 @@ const LandingPage: React.FC = () => {
               A comprehensive learning management system designed for modern colleges. 
               Streamline courses, quizzes, and assignments in one secure platform.
             </p>
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <CheckCircle2 className="text-green-500" size={20} />
-                <span>Outcome Based Learning</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <CheckCircle2 className="text-green-500" size={20} />
-                <span>Real-time Notifications</span>
-              </div>
-            </div>
           </motion.div>
 
           <motion.div
