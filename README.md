@@ -1,4 +1,4 @@
-# KL LMS (COLLAGE)
+# KL LMS (UNIVERSITY)
 ## https://kllms.vercel.app/
 This contains everything you need to run your app locally.
 
